@@ -1,19 +1,25 @@
 package com.misakyanls.chess.piece;
 
+
 public class Rook extends ChessPiece {
 
 	@Override
-	public void markTakePositions(int[][] board, boolean remove) {
-		int inc = remove ? -1 : 1;
-		// mark row
+	public boolean set(int[][] board, int row, int col) {
+		getTakePositions().clear();
 		for (int i = 0; i < board[row].length; ++i) {
-			board[row][i] = board[row][i] + inc;
+			if (board[row][i] < 0)
+				return false;
+			else
+				getTakePositions().add(new Position(row, i));
 		}
 
-		// mark column
 		for (int i = 0; i < board.length; ++i) {
-			board[i][col] = board[i][col] + inc;
+			if (board[i][col] < 0)
+				return false;
+			else
+				getTakePositions().add(new Position(i, col));
 		}
+		return super.set(board, row, col);
 	}
 
 }

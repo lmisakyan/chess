@@ -16,16 +16,7 @@ import com.misakyanls.chess.piece.Queen;
 import com.misakyanls.chess.piece.Rook;
 
 public class ChessProblem {
-	// private static int[][] board;
-
-	private static int[][] copyBoard(int[][] board) {
-		int[][] result = new int[board.length][];
-		for (int i = 0; i < board.length; ++i) {
-			result[i] = new int[board[i].length];
-			System.arraycopy(board[i], 0, result[i], 0, board[i].length);
-		}
-		return result;
-	}
+	private static int[][] board;
 
 	static List<ChessPiece> createPieces(BufferedReader in) throws IOException {
 		int kings = 0, queens = 0, bishops = 0, rooks = 0, knights = 0;
@@ -76,17 +67,13 @@ public class ChessProblem {
 	}
 
 	private static boolean canStand(ChessPiece piece, int row, int col) {
-		int[][] board = piece.getBoard();
 		row = row == -1 ? 0 : row;
 		col = col == -1 ? 0 : col + 1;
 		while (row < board.length) {
 			while (col < board[row].length) {
 				if (board[row][col] == 0) {
-					if (!piece.attackAnybody(board, row, col)) {
-						piece.remove();
-						piece.set(board, row, col);
+					if (piece.set(board, row, col))
 						return true;
-					}
 				}
 				++col;
 			}
@@ -98,14 +85,12 @@ public class ChessProblem {
 
 	public static int solve(int m, int n, List<ChessPiece> pieces) {
 		int result = 0;
-		int[][] board = new int[m][n];
+		board = new int[m][n];
 		int pieceCount = pieces.size();
 		int y = 0;
 		int initRow = -1, initCol = -1;
 		ChessPiece piece = pieces.get(y);
-		piece.setBoard(board);
 		while (y >= 0) {
-			board = copyBoard(piece.getBoard());
 			if (canStand(piece, initRow, initCol))
 				if (y < pieceCount - 1) {
 					ChessPiece prev = piece;
@@ -117,20 +102,21 @@ public class ChessProblem {
 						initRow = -1;
 						initCol = -1;
 					}
-					piece.setBoard(prev.getBoard());
-					prev.setBoard(board);
 				} else {
 					++result;
-					// System.out.println(Arrays.deepToString(board));
-					// piece.markTakePositions(board, true);
+					piece.markTakePositions(board, true);
+					initRow = piece.getRow();
+					initCol = piece.getCol();
+					piece.remove(board);
 				}
 			else if (--y >= 0) {
-				piece.remove();
 				piece = pieces.get(y);
-				// piece.markTakePositions(board, true);
+				piece.markTakePositions(board, true);
 				initRow = piece.getRow();
 				initCol = piece.getCol();
+				piece.remove(board);
 			}
+
 		}
 		return result;
 	}

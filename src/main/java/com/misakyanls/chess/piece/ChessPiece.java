@@ -1,20 +1,20 @@
 package com.misakyanls.chess.piece;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public abstract class ChessPiece {
 	protected int row = -1, col = -1;
-	protected int[][] board;
+	private Collection<Position> takePositions = new ArrayList<Position>(30);
 
-	public int[][] getBoard() {
-		return board;
+	public void markTakePositions(int[][] board, boolean remove) {
+		int inc = remove ? -1 : 1;
+		for (Position p : getTakePositions())
+			board[p.getRow()][p.getCol()] = board[p.getRow()][p.getCol()] + inc;
+
 	}
 
-	public void setBoard(int[][] board) {
-		this.board = board;
-	}
-
-	public abstract void markTakePositions(int[][] board, boolean remove);
-
-	public void remove() {
+	public void remove(int[][] board) {
 		if (row == -1)
 			return;
 		board[row][col] = 0;
@@ -22,15 +22,20 @@ public abstract class ChessPiece {
 		setRow(-1);
 	}
 
-	public void set(int[][] board, int row, int col) {
+	public boolean set(int[][] board, int row, int col) {
 		this.col = col;
 		this.row = row;
 		markTakePositions(board, false);
 		board[row][col] = -1;
+		return true;
 	}
 
-	public boolean attackAnybody(int[][] board, int row, int col) {
-		return false;
+	public Collection<Position> getTakePositions() {
+		return takePositions;
+	}
+
+	public void setTakePositions(Collection<Position> takePositions) {
+		this.takePositions = takePositions;
 	}
 
 	public int getRow() {

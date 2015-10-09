@@ -7,7 +7,6 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.misakyanls.chess.piece.Bishop;
@@ -69,7 +68,35 @@ public class ChessTest {
 	}
 
 	@Test
-	@Ignore
+	public void knightsAndRooksTest() {
+		List<ChessPiece> pieces = new ArrayList<>();
+		pieces.add(new Rook());
+		pieces.add(new Rook());
+		for (int i = 0; i < 4; ++i)
+			pieces.add(new Knight());
+
+		assertThat(solve(4, 4, pieces), is(8));
+	}
+
+	@Test
+	public void fourKnightsTest() {
+		List<ChessPiece> pieces = new ArrayList<>();
+		for (int i = 0; i < 4; ++i)
+			pieces.add(new Knight());
+
+		assertThat(solve(2, 2, pieces), is(1));
+	}
+
+	@Test
+	public void bishopKnightTest() {
+		List<ChessPiece> pieces = new ArrayList<>();
+		pieces.add(new Bishop());
+		pieces.add(new Knight());
+
+		assertThat(solve(2, 2, pieces), is(8));
+	}
+
+	@Test
 	public void allPiecesTest() {
 		List<ChessPiece> pieces = new ArrayList<>();
 		pieces.add(new Queen());
@@ -79,6 +106,6 @@ public class ChessTest {
 		for (int i = 0; i < 2; ++i)
 			pieces.add(new King());
 
-		assertThat(solve(6, 9, pieces), is(4));
+		assertThat(solve(6, 9, pieces), is(20136752));
 	}
 }

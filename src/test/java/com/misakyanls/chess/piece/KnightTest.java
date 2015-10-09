@@ -13,8 +13,7 @@ public class KnightTest {
 	@Test
 	public void takePositionsTest() {
 		int[][] board = new int[5][5];
-		assertThat(knight.attackAnybody(board, 2, 2), is(false));
-		knight.set(board, 2, 2);
+		assertThat(knight.set(board, 2, 2), is(true));
 		assertThat(board[0], is(new int[] { 0, 1, 0, 1, 0 }));
 		assertThat(board[1], is(new int[] { 1, 0, 0, 0, 1 }));
 		assertThat(board[2], is(new int[] { 0, 0, -1, 0, 0 }));
@@ -25,19 +24,25 @@ public class KnightTest {
 	@Test
 	public void takePositionsTLCornerTest() {
 		int[][] board = new int[4][4];
-		assertThat(knight.attackAnybody(board, 0, 0), is(false));
-		knight.set(board, 0, 0);
+		assertThat(knight.set(board, 0, 0), is(true));
 		assertThat(board[0], is(new int[] { -1, 0, 0, 0 }));
 		assertThat(board[1], is(new int[] { 0, 0, 1, 0 }));
 		assertThat(board[2], is(new int[] { 0, 1, 0, 0 }));
+		assertThat(board[3], is(new int[] { 0, 0, 0, 0 }));
+		
+		knight.markTakePositions(board, true);
+		knight.remove(board);
+		assertThat(knight.set(board, 0, 1), is(true));
+		assertThat(board[0], is(new int[] { 0, -1, 0, 0 }));
+		assertThat(board[1], is(new int[] { 0, 0, 0, 1 }));
+		assertThat(board[2], is(new int[] { 1, 0, 1, 0 }));
 		assertThat(board[3], is(new int[] { 0, 0, 0, 0 }));
 	}
 
 	@Test
 	public void takePositionsDRCornerTest() {
 		int[][] board = new int[4][4];
-		assertThat(knight.attackAnybody(board, 3, 3), is(false));
-		knight.set(board, 3, 3);
+		assertThat(knight.set(board, 3, 3), is(true));
 		assertThat(board[0], is(new int[] { 0, 0, 0, 0 }));
 		assertThat(board[1], is(new int[] { 0, 0, 1, 0 }));
 		assertThat(board[2], is(new int[] { 0, 1, 0, 0 }));
@@ -48,10 +53,10 @@ public class KnightTest {
 	public void takePositionsUnderThreatTest() {
 		int[][] board = new int[4][4];
 		board[2][1] = -1;
-		assertThat(knight.attackAnybody(board, 3, 3), is(true));
+		assertThat(knight.set(board, 3, 3), is(false));
 
 		board[2][1] = 0;
 		board[1][2] = -1;
-		assertThat(knight.attackAnybody(board, 3, 3), is(true));
+		assertThat(knight.set(board, 3, 3), is(false));
 	}
 }

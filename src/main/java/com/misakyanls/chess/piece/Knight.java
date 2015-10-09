@@ -1,72 +1,24 @@
 package com.misakyanls.chess.piece;
 
+
 public class Knight extends ChessPiece {
+	private static int[] dr = { -1, -2, -2, -1, 1, 2, 2, 1 };
+	private static int[] dc = { -2, -1, 1, 2, -2, -1, 1, 2 };
 
 	@Override
-	public void markTakePositions(int[][] board, boolean remove) {
-		int inc = remove ? -1 : 1;
-		if (row - 2 >= 0) {
-			if (col - 1 >= 0)
-				board[row - 2][col - 1] = board[row - 2][col - 1] + inc;
-			if (col + 1 < board[row - 2].length)
-				board[row - 2][col + 1] = board[row - 2][col + 1] + inc;
-		}
-		if (row - 1 >= 0) {
-			if (col - 2 >= 0)
-				board[row - 1][col - 2] = board[row - 1][col - 2] + inc;
-			if (col + 2 < board[row - 1].length)
-				board[row - 1][col + 2] = board[row - 1][col + 2] + inc;
-		}
-		if (row + 2 < board.length) {
-			if (col - 1 >= 0)
-				board[row + 2][col - 1] = board[row + 2][col - 1] + inc;
-			if (col + 1 < board[row + 2].length)
-				board[row + 2][col + 1] = board[row + 2][col + 1] + inc;
-		}
-		if (row + 1 < board.length) {
-			if (col - 2 >= 0)
-				board[row + 1][col - 2] = board[row + 1][col - 2] + inc;
-			if (col + 2 < board[row + 1].length)
-				board[row + 1][col + 2] = board[row + 1][col + 2] + inc;
+	public boolean set(int[][] board, int row, int col) {
+		getTakePositions().clear();
+
+		for (int i = 0; i < dr.length; ++i) {
+			int r = row + dr[i], c = col + dc[i];
+			if (r >= 0 && r < board.length && c >= 0 && c < board[r].length)
+				if (board[r][c] < 0)
+					return false;
+				else
+					getTakePositions().add(new Position(r, c));
 		}
 
-	}
-
-	@Override
-	public boolean attackAnybody(int[][] board, int row, int col) {
-		if (row - 2 >= 0) {
-			if (col - 1 >= 0)
-				if (board[row - 2][col - 1] < 0)
-					return true;
-			if (col + 1 < board[row - 2].length)
-				if (board[row - 2][col + 1] < 0)
-					return true;
-		}
-		if (row - 1 >= 0) {
-			if (col - 2 >= 0)
-				if (board[row - 1][col - 2] < 0)
-					return true;
-			if (col + 2 < board[row - 1].length)
-				if (board[row - 1][col + 2] < 0)
-					return true;
-		}
-		if (row + 2 < board.length) {
-			if (col - 1 >= 0)
-				if (board[row + 2][col - 1] < 0)
-					return true;
-			if (col + 1 < board[row + 2].length)
-				if (board[row + 2][col + 1] < 0)
-					return true;
-		}
-		if (row + 1 < board.length) {
-			if (col - 2 >= 0)
-				if (board[row + 1][col - 2] < 0)
-					return true;
-			if (col + 2 < board[row + 1].length)
-				if (board[row + 1][col + 2] < 0)
-					return true;
-		}
-		return super.attackAnybody(board, row, col);
+		return super.set(board, row, col);
 	}
 
 }
